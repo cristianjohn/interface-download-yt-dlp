@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT-DLP Downloader</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>YT-DLP Video Downloader</h1>
+        
+        <!-- Formulário de adição à fila -->
+        <form id="downloadForm">
+            <div class="form-group">
+                <label for="videoUrl">URL do Vídeo:</label>
+                <input type="url" id="videoUrl" name="videoUrl" required placeholder="https://exemplo.com/video">
+            </div>
+            
+            <div class="form-group">
+                <label for="refererUrl">URL Referer:</label>
+                <input type="url" id="refererUrl" name="refererUrl" required placeholder="https://exemplo.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="title">Título (opcional):</label>
+                <input type="text" id="title" name="title" placeholder="Deixe vazio para usar o título do vídeo">
+            </div>
+            
+            <div class="form-group">
+                <label for="downloadType">Tipo de Download:</label>
+                <select id="downloadType" name="downloadType">
+                    <option value="video">Vídeo Completo (MP4)</option>
+                    <option value="audio">Apenas Áudio (MP3)</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" id="downloadBtn">Baixar Vídeo</button>
+                <button type="button" id="addToQueueKeepBtn" class="btn-primary">Adicionar à Fila <br> (Manter Campos)</button>
+                <button type="button" id="addToQueueClearBtn" class="btn-primary">Adicionar à Fila <br> (Limpar Campos)</button>
+                <button type="button" id="clearQueueBtn" class="btn-secondary">Limpar Fila</button>
+            </div>
+        </form>
+        
+        <!-- Status da fila -->
+        <div id="queueStatus" class="queue-status">
+            <h3>Status da Fila</h3>
+            <div class="status-info">
+                <span id="queueLength">0 itens na fila</span>
+                <span id="processingStatus" class="processing-status">Aguardando...</span>
+            </div>
+        </div>
+        
+        <!-- Download atual -->
+        <div id="currentDownload" class="current-download hidden">
+            <h4>Download Atual:</h4>
+            <div class="download-item current">
+                <span id="currentTitle">-</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fila de downloads -->
+        <div id="downloadQueue" class="download-queue">
+            <h4>Fila de Downloads:</h4>
+            <div id="queueList" class="queue-list">
+                <!-- Itens da fila serão inseridos aqui -->
+            </div>
+        </div>
+        
+        <!-- Downloads concluídos -->
+        <div id="completedDownloads" class="completed-downloads">
+            <h4>Downloads Concluídos:</h4>
+            <div id="completedList" class="completed-list">
+                <!-- Downloads concluídos serão inseridos aqui -->
+            </div>
+        </div>
+        
+        <div id="status" class="status hidden"></div>
+        <div id="output" class="output hidden"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

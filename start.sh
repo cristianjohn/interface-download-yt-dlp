@@ -33,7 +33,7 @@ echo "🔧 Ativando ambiente virtual..."
 source venv/bin/activate
 
 echo "📦 Instalando dependências..."
-pip install -r requirements.txt
+venv/bin/pip install -r requirements.txt
 
 if [ $? -ne 0 ]; then
     echo "❌ Falha ao instalar dependências."
@@ -54,4 +54,4 @@ echo "Para parar o servidor, pressione Ctrl+C"
 echo
 
 # Iniciar o servidor
-python3 app.py
+venv/bin/python app.py

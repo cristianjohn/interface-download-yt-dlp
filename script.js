@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return {
             video_url: videoUrl,
-            referer_url: refererUrl,
+            referer_url: refererUrl || null,
             title: title || 'Sem título',
             download_type: downloadType
         };

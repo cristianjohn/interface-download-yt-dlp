@@ -94,15 +94,19 @@ def process_download_queue():
         
         time.sleep(1)  # Verificar fila a cada segundo
 
-def get_video_title(video_url, referer_url):
+def get_video_title(video_url, referer_url=None):
     """Extrai o título do vídeo usando yt-dlp"""
     try:
         cmd = [
             'yt-dlp',
-            '--get-title',
-            '--referer', referer_url,
-            video_url
+            '--get-title'
         ]
+        
+        # Adicionar referer apenas se fornecido
+        if referer_url:
+            cmd.extend(['--referer', referer_url])
+        
+        cmd.append(video_url)
         
         result = subprocess.run(
             cmd,
@@ -119,30 +123,23 @@ def get_video_title(video_url, referer_url):
         print(f"Erro ao obter título: {e}")
         return None
 
-def execute_download(video_url, referer_url, download_type='video'):
+def execute_download(video_url, referer_url=None, download_type='video'):
     """Executa o download de um vídeo ou áudio"""
     try:
         # Construir comando yt-dlp baseado no tipo
+        cmd = ['yt-dlp']
+
         if download_type == 'audio':
-            cmd = [
-                'yt-dlp',
-                '-f', 'bestaudio',
-                '--referer', referer_url,
-                '--extract-audio',
-                '--audio-format', 'mp3',
-                '-o', os.path.join(DOWNLOAD_DIR, '%(title)s.%(ext)s'),
-                video_url
-            ]
+            cmd.extend(['-f', 'bestaudio', '--extract-audio', '--audio-format', 'mp3'])
         else:  # video completo
-            cmd = [
-                'yt-dlp',
-                '-f', 'bv*+ba/b',
-                '--referer', referer_url,
-                '--merge-output-format', 'mp4',
-                '-o', os.path.join(DOWNLOAD_DIR, '%(title)s.%(ext)s'),
-                video_url
-            ]
-        
+            cmd.extend(['-f', 'bv*+ba/b', '--merge-output-format', 'mp4'])
+
+        # Adicionar referer apenas se fornecido
+        if referer_url:
+            cmd.extend(['--referer', referer_url])
+
+        cmd.extend(['-o', os.path.join(DOWNLOAD_DIR, '%(title)s.%(ext)s'), video_url])
+
         # Executar comando
         result = subprocess.run(
             cmd,
@@ -150,9 +147,9 @@ def execute_download(video_url, referer_url, download_type='video'):
             text=True,
             timeout=300  # Timeout de 5 minutos
         )
-        
+
         output = result.stdout + result.stderr
-        
+
         if result.returncode == 0:
             return {
                 'success': True,
@@ -200,14 +197,14 @@ def add_to_queue():
         user_title = data.get('title', '').strip()
         download_type = data.get('download_type', 'video')
         
-        if not video_url or not referer_url:
+        if not video_url:
             return jsonify({
                 'success': False,
-                'error': 'URL do vídeo e URL referer são obrigatórias'
+                'error': 'URL do vídeo é obrigatória'
             }), 400
         
         # Validar URLs
-        if not is_valid_url(video_url) or not is_valid_url(referer_url):
+        if not is_valid_url(video_url) or (referer_url and not is_valid_url(referer_url)):
             return jsonify({
                 'success': False,
                 'error': 'URLs fornecidas são inválidas'
